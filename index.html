@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejemplo1</title>
+    <link href="css/style.css" rel="stylesheet" />
+
+</head>
+<body>
+    <div class="container">
+      <h2>Registro Login</h2>
+      <form id="authForm">
+        <input type="text" id="username" placeholder="Usuario" required>
+        <input type="password" id="password" placeholder="Contraseña" required>
+        <div>
+          <button type="button" id="loginBtn">Iniciar Sesión</button>
+          <button type="button" id="registerBtn">Registrar</button>
+        </div>
+      </form>
+      <p class="message" id="message"></p>
+    </div>
+  
+    <script>
+      // Pila para guardar usuarios y contraseñas
+      const usersStack = [];
+  
+      // Referencias a elementos del DOM
+      const loginBtn = document.getElementById('loginBtn');
+      const registerBtn = document.getElementById('registerBtn');
+      const message = document.getElementById('message');
+      const usernameInput = document.getElementById('username');
+      const passwordInput = document.getElementById('password');
+  
+      // Función para registrar usuario
+      function registerUser() {
+        const username = usernameInput.value.trim();
+        const password = passwordInput.value.trim();
+  
+        if (!username || !password) {
+          message.textContent = 'Por favor, completa todos los campos.';
+          message.style.color = '#d9534f';
+          return;
+        }
+  
+        // Verificar si el usuario ya existe
+        const userExists = usersStack.some(user => user.username === username);
+  
+        if (userExists) {
+          message.textContent = 'El usuario ya está registrado. Por favor, inicia sesión.';
+          message.style.color = '#d9534f';
+        } else {
+          // Agregar usuario a la pila
+          usersStack.push({ username, password });
+          message.textContent = 'Usuario registrado con éxito. Ahora puedes iniciar sesión.';
+          message.style.color = 'green';
+        }
+  
+        // Limpiar campos
+        usernameInput.value = '';
+        passwordInput.value = '';
+      }
+  
+      // Función para iniciar sesión
+      function loginUser() {
+        const username = usernameInput.value.trim();
+        const password = passwordInput.value.trim();
+  
+        if (!username || !password) {
+          message.textContent = 'Por favor, completa todos los campos.';
+          message.style.color = '#d9534f';
+          return;
+        }
+  
+        // Buscar usuario en la pila
+        const user = usersStack.find(user => user.username === username);
+  
+        if (user) {
+          if (user.password === password) {
+            message.textContent = '¡Inicio de sesión exitoso! Redirigiendo...';
+            message.style.color = 'green';
+  
+            // Redirigir a la página principal
+            setTimeout(() => {
+              window.location.href = 'src/inde.html';
+            }, 1000); // Espera 1 segundo antes de redirigir
+          } else {
+            message.textContent = 'Contraseña incorrecta.';
+            message.style.color = '#d9534f';
+          }
+        } else {
+          message.textContent = 'Usuario no encontrado. Por favor, regístrate primero.';
+          message.style.color = '#d9534f';
+        }
+  
+        // Limpiar campos
+        usernameInput.value = '';
+        passwordInput.value = '';
+      }
+  
+      // Eventos de los botones
+      registerBtn.addEventListener('click', registerUser);
+      loginBtn.addEventListener('click', loginUser);
+    </script>
+  </body>
+  </html>
